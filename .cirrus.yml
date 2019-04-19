@@ -1,0 +1,10 @@
+task:
+  name: build-test-ubuntu1604
+  container:
+    cpu: 4
+    memory: 16
+    dockerfile: .cirrus/Dockerfile.ubuntu16.04
+
+  build_script: ~/bootstrap.sh && cd ~/build && ninja
+  test_script: cd ~/tests && ./run_tests.py
+  

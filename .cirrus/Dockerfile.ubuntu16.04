@@ -1,0 +1,9 @@
+FROM ubuntu:xenial-20181113
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN set -e -x ;\
+    apt-get -y update ;\
+    apt-get -y upgrade ;\
+    apt-get -y install \
+        build-essential cmake gcc git ninja-build doxygen python3
