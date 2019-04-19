@@ -1,5 +1,5 @@
 # PADRING - a padring generator for ASICs
-[![Build Status](https://api.cirrus-ci.com/github/YosysHQ/padring.svg)](https://cirrus-ci.com/github/YosysHQ/padring)
+[![Build Status](http://api.cirrus-ci.com/github/YosysHQ/padring.svg)](https://cirrus-ci.com/github/YosysHQ/padring)
 
 ![](doc/padring.png)
 
