@@ -6,4 +6,9 @@ RUN set -e -x ;\
     apt-get -y update ;\
     apt-get -y upgrade ;\
     apt-get -y install \
-        build-essential cmake gcc git ninja-build doxygen python3
+        build-essential autoconf cmake gcc git ninja-build doxygen python3
+
+RUN set -e -x ;\
+    git clone https://gitlab.kitware.com/cmake/cmake.git ;\
+    cd cmake && git checkout tags/v3.14.2 ;\
+    ./bootstrap && make && make install ;\
