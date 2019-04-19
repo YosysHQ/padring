@@ -1,5 +1,7 @@
 # PADRING - a padring generator for ASICs
 
+![](doc/padring.png)
+
 This tool makes padrings for ASICs using a LEF file and a placement/configuration file.
 The padrings can be output in GDS2, DEF and/or SVG format.
 Check out the example in the `example` directory.
