@@ -1,5 +1,5 @@
 task:
-  name: build-test-ubuntu1604
+  name: build-test-ubuntu1804
   container:
     cpu: 4
     memory: 16
