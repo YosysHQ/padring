@@ -1,4 +1,5 @@
 # PADRING - a padring generator for ASICs
+[![Build Status](https://api.cirrus-ci.com/github/YosysHQ/padring.svg)](https://cirrus-ci.com/github/YosysHQ/padring)
 
 ![](doc/padring.png)
 
@@ -15,7 +16,6 @@ Check out the example in the `example` directory.
 * -o, --output \<filename\> : optional, filename of GDS2 to generate.
 
 The filler cells are auto-detected by the padring program. Should this process fail, the user can add an explicit prefix which will be used to find the filler cells.
-
 
 ## Configuration file
 
@@ -49,7 +49,7 @@ Space between the I/O pads is distributed evenly unless a specific space between
 ## Building
 
 Dependencies:
-* CMAKE 3.12 or better.
+* CMAKE 3.10 or better.
 * Ninja build.
 * C++17 capable compiler.
 * Optionally: Doxygen.

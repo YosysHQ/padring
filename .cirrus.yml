@@ -1,0 +1,10 @@
+task:
+  name: build-test-ubuntu1804
+  container:
+    cpu: 4
+    memory: 16
+    dockerfile: .cirrus/Dockerfile.ubuntu18.04
+
+  build_script: ./bootstrap.sh && cd build && ninja && cd ..
+  test_script: cd ./tests && ./run_tests.py
+  
