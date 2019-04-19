@@ -3,7 +3,7 @@ task:
   container:
     cpu: 4
     memory: 16
-    dockerfile: .cirrus/Dockerfile.ubuntu16.04
+    dockerfile: .cirrus/Dockerfile.ubuntu18.04
 
   build_script: ./bootstrap.sh && ninja
   test_script: cd ../tests && ./run_tests.py
