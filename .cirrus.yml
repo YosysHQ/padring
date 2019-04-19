@@ -5,6 +5,6 @@ task:
     memory: 16
     dockerfile: .cirrus/Dockerfile.ubuntu18.04
 
-  build_script: ./bootstrap.sh && ninja
-  test_script: cd ../tests && ./run_tests.py
+  build_script: ./bootstrap.sh && cd build && ninja && cd ..
+  test_script: cd ./tests && ./run_tests.py
   

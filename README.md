@@ -49,7 +49,7 @@ Space between the I/O pads is distributed evenly unless a specific space between
 ## Building
 
 Dependencies:
-* CMAKE 3.12 or better.
+* CMAKE 3.10 or better.
 * Ninja build.
 * C++17 capable compiler.
 * Optionally: Doxygen.
