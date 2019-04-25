@@ -17,9 +17,10 @@
     
 */
 
+#include "../logging.h"
 #include "gds2writer.h"
 
-GDS2Writer* GDS2Writer::open(const std::string &filename)
+GDS2Writer* GDS2Writer::open(const std::string &filename, const std::string &designName)
 {
     FILE *f = fopen(filename.c_str(), "wb");
     if (f == nullptr)
@@ -27,18 +28,21 @@ GDS2Writer* GDS2Writer::open(const std::string &filename)
         return nullptr;
     }
 
-    return new GDS2Writer(f);
+    return new GDS2Writer(f, designName);
 }
 
-GDS2Writer::GDS2Writer(FILE *f) : m_fout(f)
+GDS2Writer::GDS2Writer(FILE *f, const std::string &designName) 
+    : m_fout(f), m_designName(designName)
 {   
-    writeHeader(); 
+    doLog(LOG_VERBOSE,"GDS2Writer created\n");
+    writeHeader();
 }
 
 GDS2Writer::~GDS2Writer()
 {
     writeEpilog();
     fclose(m_fout);
+    doLog(LOG_VERBOSE,"GDS2Writer destroyed\n");
 }
 
 inline void endian_swap(uint16_t &x)
@@ -175,7 +179,7 @@ void GDS2Writer::writeHeader()
     writeUint16(0x4141);
 
     // UNITS
-    writeUint16(0x014);     // two 8-byte real
+    writeUint16(0x0014);     // two 8-byte real
     writeUint16(0x0305);    // UNITS id
     writeUint32(0x3E418937);
     writeUint32(0x4BC6A7EF);    
@@ -198,10 +202,11 @@ void GDS2Writer::writeHeader()
     writeUint16(0x0000);    // minute
     writeUint16(0x0000);    // second
 
-    // STRNAME
-    writeUint16(0x000C);    // Len
+    // STRNAME 
+    uint32_t bytes = m_designName.size() + (m_designName.size() % 2);
+    writeUint16(bytes+4);   // Len
     writeUint16(0x0606);    // STRNAME id
-    writeString("EXAMPLE");
+    writeString(m_designName);
 }
 
 void GDS2Writer::writeEpilog()

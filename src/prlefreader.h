@@ -46,23 +46,9 @@ public:
     /** callback for SYMMETRY within a macro */
     virtual void onSymmetry(const std::string &symmetry) override;
 
-#if 0
-    /** callback for ORIGIN within a macro */
-    virtual void onOrigin(double x, double y) {}
 
-    /** callback for SITE within a macro */
-    virtual void onSite(const std::string &site) {}
-
-    /** callback for PIN within a macro */
-    virtual void onPin(const std::string &pinName) {}
-
-    /** callback for PIN direction */
-    virtual void onPinDirection(const std::string &direction) {}
-
-    /** callback for PIN use */
-    virtual void onPinUse(const std::string &use) {}
-#endif
-
+    /** callback for UNITS DATABASE MICRONS */
+    virtual void onDatabaseUnitsMicrons(double unitsPerMicron) override;
 
     void doIntegrityChecks();
 
@@ -83,6 +69,8 @@ public:
     LEFCellInfo_t *m_parseCell;   ///< current cell being parsed
     
     std::unordered_map<std::string, LEFCellInfo_t*> m_cells;
+
+    double m_lefDatabaseUnits;      ///< database units in microns
 };
 
 #endif

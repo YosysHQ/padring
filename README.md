@@ -21,6 +21,11 @@ The filler cells are auto-detected by the padring program. Should this process f
 
 The following commands are available:
 
+#### DESIGN \<name\> ;
+* Sets the name of the design in the GDS2/DEF output file.
+* Optional
+* Default = PADRING
+
 #### GRID \<grid size\> ;
 * Sets the placement grid size in microns.
 * Optional

@@ -37,17 +37,35 @@ public:
 
     void writeCell(const LayoutItem *item);
 
+    void setDatabaseUnits(double databaseUnits)
+    {
+        m_databaseUnits = databaseUnits;
+    }
+
+    void setDesignName(const std::string &designName)
+    {
+        m_designName = designName;
+    }
+
 protected:
-    void toDEFCoordinates(double &x, double &y) const;
+
+    /** convert to DEF database units / coordinates.
+        this function will issue a warning when
+        m_databaseUnits has not been set and set it
+        to 1000.
+    */
+    void toDEFCoordinates(double &x, double &y);
 
     void writeToFile();
 
-    std::stringstream m_ss;
-
-    std::ostream &m_def;
+    std::stringstream   m_ss;
+    std::string         m_designName;
+    std::ostream        &m_def;
+    
     uint32_t m_width;
     uint32_t m_height;
     uint32_t m_cellCount;
+    double   m_databaseUnits;
 };
 
 #endif

@@ -37,6 +37,7 @@ public:
     {
         m_south.setEdgePos(0.0);
         m_west.setEdgePos(0.0);
+        m_designName = "PADRING";
     }
 
     /** callback for a corner */
@@ -192,9 +193,14 @@ public:
     }
 
     /** callback for offset in microns */
-    virtual void onOffset(double offset)
+    virtual void onOffset(double offset) override
     {
         //FIXME: offset not supported yet!
+    }
+
+    virtual void onDesignName(const std::string &designName) override
+    {
+        m_designName = designName;
     }
 
     void doLayout()
@@ -213,6 +219,8 @@ public:
     double m_dieHeight;
     double m_dieWidth;
     double m_grid;
+
+    std::string m_designName;
 
     std::string m_fillerPrefix;
     std::string m_lastLocation;

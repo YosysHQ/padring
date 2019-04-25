@@ -216,32 +216,36 @@ bool ConfigReader::parse(std::istream &configstream)
             case TOK_IDENT:
                 if (tokstr == "CORNER")
                 {
-                    parseCorner();
+                    if (!parseCorner()) return false;
                 }
                 else if (tokstr == "AREA")
                 {
-                    parseArea();
+                    if (!parseArea()) return false;
                 }
                 else if (tokstr == "PAD")
                 {
-                    parsePad();
+                    if (!parsePad()) return false;
                 }
                 else if (tokstr == "GRID")
                 {
-                    parseGrid();
+                    if (!parseGrid()) return false;
                 }
                 else if (tokstr == "SPACE")
                 {
-                    parseSpace();
+                    if (!parseSpace()) return false;
                 }
                 else if (tokstr == "FILLER")
                 {
-                    parseFiller();
+                    if (!parseFiller()) return false;
                 }                
                 else if (tokstr == "OFFSET")
                 {
-                    parseOffset();
+                    if (!parseOffset()) return false;
                 }
+                else if (tokstr == "DESIGN")
+                {
+                    if (!parseDesignName()) return false;
+                }                
                 else
                 {
                     std::stringstream ss;
@@ -423,6 +427,7 @@ bool ConfigReader::parseArea()
     catch(const std::invalid_argument& ia)
     {
         error(ia.what());
+        return false;
     }
 
     onArea(wd,hd);
@@ -561,5 +566,31 @@ bool ConfigReader::parseFiller()
     }
 
     onFiller(fillerName);
+    return true;
+}
+
+bool ConfigReader::parseDesignName()
+{
+    // DESIGN: designname
+    std::string tokstr;
+    std::string designName;
+
+    // designname
+    ConfigReader::token_t tok = tokenize(designName);
+    if (tok != TOK_IDENT)
+    {
+        error("Expected a design name\n");
+        return false;
+    }
+
+    // expect semicol
+    tok = tokenize(tokstr);
+    if (tok != TOK_SEMICOL)
+    {
+        error("Expected ;\n");
+        return false;
+    }
+
+    onDesignName(designName);
     return true;
 }

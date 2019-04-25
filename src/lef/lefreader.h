@@ -1,5 +1,5 @@
 /*
-    PADRING -- a padring generator for ASICs.
+    SCPLACER -- a standard cell placer for ASICs.
 
     Copyright (c) 2019, Niels Moseley <niels@symbioticeda.com>
 
@@ -87,6 +87,33 @@ public:
     /** callback for PIN use */
     virtual void onPinUse(const std::string &use) {}
 
+    /** callback when done parsing */
+    virtual void onEndParse() {}
+
+    /** callback for layer */
+    virtual void onLayer(const std::string &layerName) {}
+
+    /** callback for layer type */
+    virtual void onLayerType(const std::string &layerType) {}
+
+    /** callback for layer pitch */
+    virtual void onLayerPitch(double pitch) {}
+
+    /** callback for layer offset */    
+    virtual void onLayerOffset(double offset) {}
+
+    /** callback for layer routing direction */
+    virtual void onLayerDirection(const std::string &direction) {}
+
+    /** callback for layer trace width */
+    virtual void onLayerWidth(double width) {}
+
+    /** callback for layer trace max width */    
+    virtual void onLayerMaxWidth(double maxWidth) {}
+
+    /** callback for units database microns */
+    virtual void onDatabaseUnitsMicrons(double unitsPerMicron) {}
+
 protected:
     bool isWhitespace(char c) const;
     bool isAlpha(char c) const;
@@ -103,13 +130,31 @@ protected:
     bool parsePin();
     bool parseDirection();
     bool parseUse();
+    
     bool parsePort();
-    bool parseLayer(std::string &tokstr);
-    bool parseLayerItem(std::string &tokstr);
+    bool parsePortLayer();
+    bool parsePortLayerItem();
     bool parseRect();
+    
+    bool parseLayer();
+    bool parseLayerItem();
+    bool parseLayerType();
+    bool parseLayerPitch();
+    bool parseLayerWidth();
+    bool parseLayerMaxWidth();
+    bool parseLayerDirection();
+    bool parseLayerOffset();
+
+    bool parseVia();
+    bool parseViaRule();
+
+    bool parseUnits();
 
     token_t tokenize(std::string &tokstr);
     char         m_tokchar;
+
+    LEFReader::token_t m_curtok;
+    std::string        m_tokstr;
 
     void error(const std::string &errstr);
 

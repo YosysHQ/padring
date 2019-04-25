@@ -147,13 +147,21 @@ int main(int argc, char *argv[])
     }
 
     PadringDB padring;
-    // read the cells from the LEF
+
+    double LEFDatabaseUnits = 0.0;
+
+    // read the cells from the LEF files
+    // and save the most recent database units figure along the way..
     auto &leffiles = cmdresult["lef"].as<std::vector<std::string> >();
     for(auto leffile : leffiles)
     {
         std::ifstream lefstream(leffile, std::ifstream::in);
         doLog(LOG_INFO, "Reading LEF %s\n", leffile.c_str());
         padring.m_lefreader.parse(lefstream);
+        if (padring.m_lefreader.m_lefDatabaseUnits > 0.0)
+        {
+            LEFDatabaseUnits = padring.m_lefreader.m_lefDatabaseUnits;
+        }
     }
 
     doLog(LOG_INFO,"%d cells read\n", padring.m_lefreader.m_cells.size());
@@ -251,6 +259,8 @@ int main(int argc, char *argv[])
 
     SVGWriter svg(svgos, padring.m_dieWidth, padring.m_dieHeight);
     DEFWriter def(defos, padring.m_dieWidth, padring.m_dieHeight);
+    def.setDatabaseUnits(LEFDatabaseUnits);
+    def.setDesignName(padring.m_designName);
 
     // emit GDS2 and SVG
     GDS2Writer *writer = nullptr;
@@ -258,7 +268,8 @@ int main(int argc, char *argv[])
     if (cmdresult.count("output")> 0)
     {
         doLog(LOG_INFO,"Writing padring to GDS2 file: %s\n", cmdresult["output"].as<std::string>().c_str());
-        writer = GDS2Writer::open(cmdresult["output"].as<std::string>());
+        writer = GDS2Writer::open(cmdresult["output"].as<std::string>(),
+            padring.m_designName);
     }
     
     writeCell(writer, topleft);
@@ -440,7 +451,7 @@ int main(int argc, char *argv[])
         }        
     }
 
-    delete writer;
+    if (writer != nullptr) delete writer;
 
     return 0;
 }

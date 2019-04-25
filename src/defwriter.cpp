@@ -22,6 +22,7 @@
 #include <iomanip>
 #include <complex>
 #include <math.h>
+#include <assert.h>
 #include "logging.h"
 #include "defwriter.h"
 
@@ -29,7 +30,8 @@ DEFWriter::DEFWriter(std::ostream &os, uint32_t width, uint32_t height)
     : m_def(os),
       m_width(width),
       m_height(height),
-      m_cellCount(0)
+      m_cellCount(0),
+      m_databaseUnits(0.0)
 {
     // make sure the stringstream doesn't use
     // exponential notation with doubles!
@@ -44,22 +46,33 @@ DEFWriter::~DEFWriter()
 
 void DEFWriter::writeToFile()
 {
-    m_def << "DESIGN PADRING ;\n";
+    assert(!m_designName.empty());
+
+    m_def << "DESIGN " << m_designName << " ;\n";
+    m_def << "UNITS DISTANCE MICRONS " << m_databaseUnits << " ; \n";
     m_def << "COMPONENTS " << m_cellCount << " ;\n";
 
     m_def << m_ss.str();
 
-    m_def << "END COMPONENTS ;\n";
+    m_def << "END COMPONENTS\n";
+    m_def << "END DESIGN\n";
 }
 
 
-void DEFWriter::toDEFCoordinates(double &x, double &y) const
+void DEFWriter::toDEFCoordinates(double &x, double &y)
 {
     //return std::complex<double>(p.real(), m_height - p.imag());
     //FIXME: use database units defined in LEF file!
 
-    x *= 1000.0;
-    y *= 1000.0;
+    if (m_databaseUnits < 1e-12)
+    {
+        doLog(LOG_WARN, "DEF database units not set! does your imported LEF file specify it?\n");
+        doLog(LOG_WARN, "  Assuming the value is 100.0\n");
+        m_databaseUnits = 100.0;
+    }
+
+    x *= m_databaseUnits;
+    y *= m_databaseUnits;
 }
 
 void DEFWriter::writeCell(const LayoutItem *item)
@@ -68,7 +81,7 @@ void DEFWriter::writeCell(const LayoutItem *item)
     {
         return;
     }
-    
+
     double rot = 0.0;
     double x = item->m_x;
     double y = item->m_y;

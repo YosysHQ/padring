@@ -22,7 +22,7 @@
 
 PRLEFReader::PRLEFReader() : m_parseCell(nullptr)
 {
-
+    m_lefDatabaseUnits = 0.0f;
 }
 
 void PRLEFReader::onMacro(const std::string &macroName)
@@ -127,4 +127,10 @@ void PRLEFReader::onClass(const std::string &className)
     {
         m_parseCell->m_isFiller = false;
     }
+}
+
+void PRLEFReader::onDatabaseUnitsMicrons(double unitsPerMicron)
+{
+    m_lefDatabaseUnits = unitsPerMicron;
+    //doLog(LOG_INFO,"LEF database units: %f units per micron\n", unitsPerMicron);
 }

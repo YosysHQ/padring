@@ -27,9 +27,11 @@
 class GDS2Writer
 {
 public:
-    static GDS2Writer* open(const std::string &filename);
-    virtual ~GDS2Writer();
+    static GDS2Writer* open(
+        const std::string &filename,
+        const std::string &designName);
 
+    virtual ~GDS2Writer();
 
     enum orientation_t
     {
@@ -43,7 +45,8 @@ public:
     /** Write a structural reference (SREF) to the GDS2
         that places a cell.
     */
-    void writeCell(const std::string &cellName, int32_t x, int32_t y, orientation_t orientation = ROT0);
+    void writeCell(const std::string &cellName, int32_t x, int32_t y, 
+        orientation_t orientation = ROT0);
 
 protected:
     void writeHeader();
@@ -60,10 +63,11 @@ protected:
     // returns the number of bytes written
     uint32_t writeString(const std::string &str);
 
-    GDS2Writer(FILE *f);
+    GDS2Writer(FILE *f, const std::string &designName);
     
-    FILE *m_fout;       ///< GDS2 file handle
-    uint32_t m_words;   ///< words written
+    FILE        *m_fout;        ///< GDS2 file handle
+    uint32_t    m_words;        ///< words written
+    std::string m_designName;   ///< set the design name
 };
 
 #endif

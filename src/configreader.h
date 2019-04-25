@@ -32,6 +32,7 @@
 
     Example file:
 
+    DESIGN PADRING
     AREA 1000 1000
     GRID 1
     CORNER CORNER1 NW CORNERESDP
@@ -124,6 +125,12 @@ public:
         std::cout << "Offset " << offset << "\n";
     }
 
+    /** callback for design name */
+    virtual void onDesignName(const std::string &designName)
+    {
+        std::cout << "Design name " << designName << "\n";
+    }
+
     /** return the number of pad cells (excluding corners) */
     uint32_t getPadCellCount() const
     {
@@ -146,6 +153,7 @@ protected:
     bool parseSpace();
     bool parseOffset();
     bool parseFiller();
+    bool parseDesignName();
 
     token_t      tokenize(std::string &tokstr);
     char         m_tokchar;
