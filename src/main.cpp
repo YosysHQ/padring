@@ -20,7 +20,7 @@
 #include <iostream>
 #include <fstream>
 
-#define __PGMVERSION__ "0.01a"
+#define __PGMVERSION__ "0.02a"
 
 #include "logging.h"
 
