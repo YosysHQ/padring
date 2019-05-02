@@ -150,6 +150,8 @@ protected:
 
     bool parseUnits();
 
+    bool parsePropertyDefintions();
+
     token_t tokenize(std::string &tokstr);
     char         m_tokchar;
 

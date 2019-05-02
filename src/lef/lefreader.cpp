@@ -222,7 +222,11 @@ void LEFReader::parse(std::istream &lefstream)
                 else if (m_tokstr == "UNITS")
                 {
                     parseUnits();
-                } 
+                }
+                else if (m_tokstr == "PROPERTYDEFINITIONS")
+                {
+                    parsePropertyDefintions();
+                }
                 break;
             default:
                 ;
@@ -1388,6 +1392,44 @@ bool LEFReader::parseUnits()
             {
                 m_curtok = tokenize(m_tokstr);
             }
+        }
+    }
+}
+
+bool LEFReader::parsePropertyDefintions()
+{
+    // basically, eat everything until
+    // we encounter END PROPERTYDEFINTIONS EOL
+
+    while(1)
+    {
+        m_curtok = tokenize(m_tokstr);
+        if ((m_curtok == TOK_IDENT) && (m_tokstr == "END"))
+        {
+            m_curtok = tokenize(m_tokstr);
+            if ((m_curtok == TOK_IDENT) && (m_tokstr == "PROPERTYDEFINITIONS"))
+            {
+                m_curtok = tokenize(m_tokstr);
+                if (m_curtok == TOK_EOL)
+                {
+                    return true;
+                }
+                else if (m_curtok == TOK_EOF)
+                {
+                    error("Unexpected end of liberty file\n");
+                    return false;                    
+                }
+            }
+            else if (m_curtok == TOK_EOF)
+            {
+                error("Unexpected end of liberty file\n");
+                return false;
+            }
+        }
+        else if (m_curtok == TOK_EOF)
+        {
+            error("Unexpected end of liberty file\n");
+            return false;
         }
     }
 }

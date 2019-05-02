@@ -6,7 +6,7 @@ import subprocess
 # define all tests and expected return value
 tests = [["noarea.config", 1],
          ["syntax.config", 1],
-         ["threecorners.config", 0]
+         ["threecorners.config", 0],
 ]
 
 

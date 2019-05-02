@@ -13,6 +13,13 @@ UNITS
     DATABASE MICRONS 1000  ;
 END UNITS
 
+# add property definitions to make sure
+# the 'MACRO' statement does not confuse
+# the parser.
+PROPERTYDEFINITIONS
+  MACRO ivCellType STRING ;
+END PROPERTYDEFINITIONS
+
 MANUFACTURINGGRID 0.01000 ;
 SITE io_site
     SYMMETRY Y  ;
