@@ -40,10 +40,10 @@ The following commands are available:
 * location: location of the corner, one of NE,SE,NW,SW.
 * cell_name: name of corner cell from the cell library.
 
-#### PAD \<instance_name\> \<location\> [F] \<cell_name\> ;
+#### PAD \<instance_name\> \<location\> [FLIP] \<cell_name\> ;
 * instance_name: name of the pad instance, i.e. gpio_1.
 * location: location of the pad, one of N,S,E,W.
-* optional 'F': flips cell in Y axis.
+* optional 'FLIP': flips cell in Y axis.
 * cell_name: name of pad cell from the cell library.
 
 #### SPACE \<space\> ;
