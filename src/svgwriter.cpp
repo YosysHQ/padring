@@ -131,6 +131,7 @@ void SVGWriter::writeCell(const LayoutItem *item)
     ur = toSVGCoordinates(ur);
     lr = toSVGCoordinates(lr);
 
+    // draw cell outline
     m_svg << "<polyline points=\"";
     m_svg << ll.real() << " " << ll.imag() << " ";
     m_svg << ul.real() << " " << ul.imag() << " ";
@@ -156,7 +157,34 @@ void SVGWriter::writeCell(const LayoutItem *item)
     }
     else
     {
-        m_svg << "style=\"fill:#FAAD355;stroke:#F25844;stroke-width:0.25\" />\n";
+        m_svg << "style=\"fill:#FAAD355;stroke:#F25844;stroke-width:0.5\" />\n";
+    }
+
+    // show cell orientation
+    {
+        double sw = item->m_lefinfo->m_sx * 0.2;
+        std::complex<double> p1 = {sw,0};
+        std::complex<double> p2 = {0.0,sw};
+        
+        if (item->m_flipped)
+        {
+            p1 = {item->m_lefinfo->m_sx - sw,0};
+            p2 = {item->m_lefinfo->m_sx, sw};
+        }
+
+        p1 *= rr;
+        p2 *= rr;
+        
+        p1 += std::complex<double>(x,y);
+        p2 += std::complex<double>(x,y);
+
+        p1 = toSVGCoordinates(p1);
+        p2 = toSVGCoordinates(p2);
+
+        m_svg << "<polyline points=\"";
+        m_svg << p1.real() << " " << p1.imag() << " ";
+        m_svg << p2.real() << " " << p2.imag() << "\" ";
+        m_svg << "style=\"stroke:#F25844;stroke-width:0.75\" />\n";
     }
 
     if (item->m_ltype == LayoutItem::TYPE_CORNER)

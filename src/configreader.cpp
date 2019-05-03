@@ -284,6 +284,7 @@ bool ConfigReader::parsePad()
     std::string instance;
     std::string location;
     std::string cellname;
+    bool flipped = false;
 
     // instance name
     ConfigReader::token_t tok = tokenize(instance);
@@ -309,8 +310,15 @@ bool ConfigReader::parsePad()
         return false;
     }
 
-    // cell name
+    // parse optional 'FLIP' argument for flipped cells
     tok = tokenize(cellname);
+    if ((tok == TOK_IDENT) && (cellname == "FLIP"))
+    {
+        flipped = true;
+        tok = tokenize(cellname);
+    }
+
+    // cell name    
     if (tok != TOK_IDENT)
     {
         error("Expected a cell name\n");
@@ -326,7 +334,7 @@ bool ConfigReader::parsePad()
     }
 
     m_padCount++;
-    onPad(instance,location,cellname);
+    onPad(instance,location,cellname,flipped);
 
     return true;
 }

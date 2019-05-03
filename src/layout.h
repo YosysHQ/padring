@@ -40,7 +40,8 @@ public:
     LayoutItem(LayoutItemType ltype) : m_lefinfo(nullptr),
         m_ltype(ltype),
         m_size(-1),
-        m_x(-1.0), m_y(-1.0)
+        m_x(-1.0), m_y(-1.0),
+        m_flipped(false)
     {        
     }
 
@@ -54,6 +55,7 @@ public:
     double      m_size;     ///< size of the item (-1 if unknown)
     double      m_x;        ///< x-position of item (-1 if unknown)
     double      m_y;        ///< y-position of item (-1 if unknown)
+    bool        m_flipped;  ///< when true, unplaced/unrotated cell is filled along y axis.
     LayoutItemType m_ltype;
 };
 

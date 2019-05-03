@@ -20,7 +20,7 @@
 #include <iostream>
 #include <fstream>
 
-#define __PGMVERSION__ "0.02a"
+#define __PGMVERSION__ "0.02b"
 
 #include "logging.h"
 
@@ -33,63 +33,6 @@
 #include "defwriter.h"
 #include "fillerhandler.h"
 #include "gds2/gds2writer.h"
-
-/** write cell, taking care of the GDS2 coordinate w.r.t. orientation/location 
- *  will return immediately when writer == nullptr.
-*/
-void writeCell(GDS2Writer *writer, const LayoutItem *item)
-{
-    if ((item == nullptr) || (writer == nullptr))
-    {
-        return;
-    }
-
-    double px = item->m_x;
-    double py = item->m_y;
-
-    // process regular cells that have N,S,E,W
-    // locations
-    if (item->m_location == "N")
-    {
-        // North orientation, rotation = 180 degrees
-        px += item->m_lefinfo->m_sx;
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py, GDS2Writer::ROT180);
-    }
-    else if (item->m_location == "S")
-    {
-        // South oritentation, rotation = 0 degrees
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py);
-    }
-    else if (item->m_location == "E")
-    {
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py, GDS2Writer::ROT90);
-    }
-    else if (item->m_location == "W")
-    {
-        py += item->m_lefinfo->m_sx;
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py, GDS2Writer::ROT270);
-    } 
-    // process corner cells that have NE,NW,SE,SW locations
-    else if (item->m_location == "NW")
-    {
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py, GDS2Writer::ROT270);
-    }
-    else if (item->m_location == "SE")
-    {
-        px += item->m_lefinfo->m_sy;
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py, GDS2Writer::ROT90);
-    }
-    else if (item->m_location == "NE")
-    {
-        px += item->m_lefinfo->m_sx;
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py, GDS2Writer::ROT180);
-    }
-    else if (item->m_location == "SW")
-    {
-        writer->writeCell(item->m_cellname, 1000.0*px, 1000.0*py);
-    }
-}
-
 
 int main(int argc, char *argv[])
 {
@@ -272,10 +215,10 @@ int main(int argc, char *argv[])
             padring.m_designName);
     }
     
-    writeCell(writer, topleft);
-    writeCell(writer, topright);
-    writeCell(writer, bottomleft);
-    writeCell(writer, bottomright);
+    if (writer != nullptr) writer->writeCell(topleft);
+    if (writer != nullptr) writer->writeCell(topright);
+    if (writer != nullptr) writer->writeCell(bottomleft);
+    if (writer != nullptr) writer->writeCell(bottomright);
 
     svg.writeCell(topleft);
     svg.writeCell(topright);
@@ -292,7 +235,7 @@ int main(int argc, char *argv[])
     {
         if (item->m_ltype == LayoutItem::TYPE_CELL)
         {
-            writeCell(writer, item);
+            if (writer != nullptr) writer->writeCell(item);
             svg.writeCell(item);
             def.writeCell(item);
         }
@@ -314,7 +257,7 @@ int main(int argc, char *argv[])
                     filler.m_size = width;
                     filler.m_location = "N";
                     filler.m_lefinfo = padring.m_lefreader.getCellByName(cellName);
-                    writeCell(writer, &filler);
+                    if (writer != nullptr) writer->writeCell(&filler);
                     svg.writeCell(&filler);
                     def.writeCell(&filler);
                     space -= width;
@@ -333,7 +276,7 @@ int main(int argc, char *argv[])
     {
         if (item->m_ltype == LayoutItem::TYPE_CELL)
         {
-            writeCell(writer, item);
+            if (writer != nullptr) writer->writeCell(item);
             svg.writeCell(item);  
             def.writeCell(item);          
         }
@@ -355,7 +298,7 @@ int main(int argc, char *argv[])
                     filler.m_size = width;
                     filler.m_location = "S";
                     filler.m_lefinfo = padring.m_lefreader.getCellByName(cellName);
-                    writeCell(writer, &filler);
+                    if (writer != nullptr) writer->writeCell(&filler);
                     svg.writeCell(&filler);
                     def.writeCell(&filler);
                     space -= width;
@@ -374,7 +317,7 @@ int main(int argc, char *argv[])
     {
         if (item->m_ltype == LayoutItem::TYPE_CELL)
         {
-            writeCell(writer, item);
+            if (writer != nullptr) writer->writeCell(item);
             svg.writeCell(item);
             def.writeCell(item);
         }
@@ -396,7 +339,7 @@ int main(int argc, char *argv[])
                     filler.m_size = width;
                     filler.m_location = "W";
                     filler.m_lefinfo = padring.m_lefreader.getCellByName(cellName);
-                    writeCell(writer, &filler);
+                    if (writer != nullptr) writer->writeCell(&filler);
                     svg.writeCell(&filler);
                     def.writeCell(&filler);
                     space -= width;
@@ -415,7 +358,7 @@ int main(int argc, char *argv[])
     {
         if (item->m_ltype == LayoutItem::TYPE_CELL)
         {
-            writeCell(writer, item);
+            if (writer != nullptr) writer->writeCell(item);
             svg.writeCell(item);
             def.writeCell(item);
         }
@@ -437,7 +380,7 @@ int main(int argc, char *argv[])
                     filler.m_size = width;
                     filler.m_location = "E";
                     filler.m_lefinfo = padring.m_lefreader.getCellByName(cellName);
-                    writeCell(writer, &filler);
+                    if (writer != nullptr) writer->writeCell(&filler);
                     svg.writeCell(&filler);
                     def.writeCell(&filler);
                     space -= width;

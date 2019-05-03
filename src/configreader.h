@@ -46,11 +46,11 @@
     SPACE 50            # fixed space between cells
     PAD IO5 N BBC16F
     PAD IO6 N BBC16F
-    OFFSET 900          # absolute offset
     PAD IO7 N BBC16F 
     PAD IO8 N BBC16F
 
 */
+
 class ConfigReader
 {
 public:
@@ -86,11 +86,15 @@ public:
         std::cout << "CORNER " << instance << " " << location << " " << cellname << "\n";
     }
 
-    /** callback for a pad */
+    /** callback for a pad 
+     *  location is one of N,S,W,E
+     *  if flipped == true, the (unplaced/unrotated) cell is flipped along the y axis.
+    */
     virtual void onPad(
         const std::string &instance,
         const std::string &location,
-        const std::string &cellname)
+        const std::string &cellname,
+        bool flipped)
     {
         std::cout << "PAD " << instance << " " << location << " " << cellname << "\n";
     }

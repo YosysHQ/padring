@@ -102,7 +102,7 @@ void DEFWriter::writeCell(const LayoutItem *item)
         y -= item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "N ;\n";
+        m_ss << "E ;\n";
     }
     else if (item->m_location == "SE")
     {
@@ -110,153 +110,75 @@ void DEFWriter::writeCell(const LayoutItem *item)
         //x += item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "E ;\n";
+        m_ss << "W ;\n";
     }
     else if (item->m_location == "NE")
     {
         y -= item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "E ;\n";
+        m_ss << "S ;\n";
     }
     else if (item->m_location == "SW")
     {
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "S ;\n";
+        m_ss << "N ;\n";
     }
     else if (item->m_location == "E")
     {
         x -= item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << " W" << " ;\n";
+
+        if (!item->m_flipped) 
+        {
+            m_ss << " W" << " ;\n";
+        }
+        else
+        {
+            m_ss << " FE" << " ;\n";
+        }
     }
     else if (item->m_location == "N")
     {
         y -= item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << " S" << " ;\n";
+        if (!item->m_flipped) 
+        {
+            m_ss << " S" << " ;\n";
+        }
+        else
+        {
+            m_ss << " FS" << " ;\n";
+        }
     }   
     else if (item->m_location == "S")
     {
         //y -= item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << " N" << " ;\n";
+        if (!item->m_flipped)
+        {
+            m_ss << " N" << " ;\n";
+        }
+        else
+        {
+            m_ss << " FN" << " ;\n";
+        }
     }        
     else
     {
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << " E" << " ;\n";
+        if (!item->m_flipped) 
+        {
+            m_ss << " E" << " ;\n";
+        }
+        else
+        {
+            m_ss << " W" << " ;\n";
+        }
     }
-    
-
-#if 0
-    // regular cells have N,S,E,W,
-    // corner cells have NE,NW,SE,SW
-    if (item->m_location == "N")
-    {
-        // North orientation, rotation = 180 degrees
-        x += item->m_lefinfo->m_sx;
-        rot = 180.0;
-    }
-    else if (item->m_location == "S")
-    {
-        // South orientation, rotation = 0 degrees
-        //y += item->m_lefinfo->m_sy;
-    }
-    else if (item->m_location == "E")
-    {
-        // East orientation
-        rot = 90.0;
-    }
-    else if (item->m_location == "W")
-    {
-        // West 
-        y += item->m_lefinfo->m_sx;
-        rot = 270.0;
-    }
-
-    // do corners
-    if (item->m_location == "NW")
-    {
-        // North West orientation, rotation = 270 degrees
-        rot = 270.0;
-    }
-    else if (item->m_location == "SE")
-    {
-        // South East orientation, rotation = 90 degrees
-        x += item->m_lefinfo->m_sy;
-        rot = 90.0;
-    }
-    else if (item->m_location == "NE")
-    {
-        x += item->m_lefinfo->m_sx;
-        rot = 180.0;
-    }
-
-    std::complex<double> ll = {0.0,0.0};
-    std::complex<double> ul = {0.0,item->m_lefinfo->m_sy};
-    std::complex<double> ur = {item->m_lefinfo->m_sx,item->m_lefinfo->m_sy};
-    std::complex<double> lr = {item->m_lefinfo->m_sx,0.0};
-
-    std::complex<double> rr = {cos(3.1415927*rot/180.0), sin(3.1415927*rot/180.0)};
-
-    ll *= rr;
-    ul *= rr;
-    ur *= rr;
-    lr *= rr;
-
-    ll += std::complex<double>(x,y);
-    ul += std::complex<double>(x,y);
-    ur += std::complex<double>(x,y);
-    lr += std::complex<double>(x,y);
-
-    ll = toSVGCoordinates(ll);
-    ul = toSVGCoordinates(ul);
-    ur = toSVGCoordinates(ur);
-    lr = toSVGCoordinates(lr);
-
-    m_svg << "<polyline points=\"";
-    m_svg << ll.real() << " " << ll.imag() << " ";
-    m_svg << ul.real() << " " << ul.imag() << " ";
-    m_svg << ur.real() << " " << ur.imag() << " ";
-    m_svg << lr.real() << " " << lr.imag() << " ";
-    m_svg << ll.real() << " " << ll.imag() << "\" ";
-
-    //
-    // colour palette
-    //
-    //  #BFE1F3 light blue
-    //  #179AA9 blue
-    //  #AAD355 green
-    //  #F9C908 yellow
-    //  #F25844 red
-    // 
-
-    //m_svg << "<rect x=\"" << x << "\" y=\"" << m_height-y << "\" ";
-    //m_svg << "width=\"" << sx << "\" height=\"" << sy << "\" ";
-    if (item->m_ltype == LayoutItem::TYPE_FILLER)
-    {
-        m_svg << "style=\"fill:#BFE1F3;stroke:#179AA9;stroke-width:0.25\" />\n";
-    }
-    else
-    {
-        m_svg << "style=\"fill:#FAAD355;stroke:#F25844;stroke-width:0.25\" />\n";
-    }
-
-    if (item->m_ltype == LayoutItem::TYPE_CORNER)
-    {
-        m_svg << "<circle cx=\"" << ll.real() << "\" cy=\"" << ll.imag() <<  "\" r=\"" << 5.0 << "\" style=\"fill:#000000\" />\n";
-    }
-
-    std::complex<double> center = (ll + ur) / 2.0;
-    if (item->m_ltype != LayoutItem::TYPE_FILLER)
-    {
-        m_svg << "<text text-anchor=\"middle\" x=\"" << center.real() << "\" y=\"" << center.imag() << "\" class=\"small\">" << item->m_cellname << "</text>\n";
-    }
-#endif
 }

@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include <string>
 
+#include "../layout.h"
+
 class GDS2Writer
 {
 public:
@@ -33,20 +35,10 @@ public:
 
     virtual ~GDS2Writer();
 
-    enum orientation_t
-    {
-        ROT0,
-        ROT90,
-        ROT180,
-        ROT270,
-        FLIPY
-    };
-
     /** Write a structural reference (SREF) to the GDS2
         that places a cell.
     */
-    void writeCell(const std::string &cellName, int32_t x, int32_t y, 
-        orientation_t orientation = ROT0);
+    void writeCell(const LayoutItem *item);
 
 protected:
     void writeHeader();
@@ -59,6 +51,8 @@ protected:
     void writeInt16(uint16_t v);
     void writeFloat32(float v);
     void writeFloat64(double v);
+
+
 
     // returns the number of bytes written
     uint32_t writeString(const std::string &str);

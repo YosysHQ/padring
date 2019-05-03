@@ -55,6 +55,10 @@ MACRO IOPAD
             RECT  15.500 39.120 68.500 105.120 ;
         END
     END PAD
+    OBS 
+        LAYER MET1 ; 
+        RECT 15.5 0 20.5 39.120 ; 
+    END
 END IOPAD
 
 MACRO PWRPAD
@@ -80,6 +84,10 @@ MACRO PWRPAD
             RECT  15.500 39.120 68.500 105.120 ;
         END
     END PAD
+    OBS 
+        LAYER MET1 ; 
+        RECT 15.5 0 20.5 39.120 ; 
+    END    
 END PWRPAD
 
 MACRO  CORNER
@@ -89,6 +97,10 @@ MACRO  CORNER
     SIZE 150.000 BY 150.000 ;
     SYMMETRY R90 ;
     SITE io_site ;
+    OBS 
+        LAYER MET1 ; 
+        RECT 0.0 0 40.0 40.0 ;
+    END    
 END CORNER
 
 MACRO  FILLER01

@@ -99,7 +99,8 @@ public:
     virtual void onPad(
         const std::string &instance,
         const std::string &location,
-        const std::string &cellname) override
+        const std::string &cellname,
+        bool flipped) override
     {
         PRLEFReader::LEFCellInfo_t *cell = m_lefreader.getCellByName(cellname);
         if (cell == nullptr)
@@ -114,6 +115,7 @@ public:
         item->m_location = location;
         item->m_size = cell->m_sx;
         item->m_lefinfo = cell;
+        item->m_flipped = flipped;
 
         // Corner cells should be symmetrical
         // i.e. width = height.

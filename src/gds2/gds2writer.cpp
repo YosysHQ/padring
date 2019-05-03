@@ -220,7 +220,171 @@ void GDS2Writer::writeEpilog()
     writeUint16(0x0400);    // ENDLIB id
 }
 
-void GDS2Writer::writeCell(const std::string &cellName, int32_t x, int32_t y, orientation_t orientation)
+
+void GDS2Writer::writeCell(const LayoutItem *item)
+{
+    if (item == nullptr)
+    {
+        return;
+    }
+
+    double px = item->m_x;      // x-position in microns
+    double py = item->m_y;      // y-position in microns
+    uint32_t rot = 0;           // rotation in degrees
+    bool     flip = false;      // true if cell is to be flipped (GDS2 flipping style!)
+
+    // process regular cells that have N,S,E,W
+    // locations
+    if (item->m_location == "N")
+    {
+        // North orientation, rotation = 180 degrees
+        if (item->m_flipped)
+        {
+            flip = true;
+            rot = 0;
+        }
+        else
+        {
+            px += item->m_lefinfo->m_sx;
+            rot = 180;
+        }
+    }
+    else if (item->m_location == "S")
+    {
+        // South orientation, rotation = 0 degrees
+        if (item->m_flipped)
+        {
+            flip = true;
+            rot = 180;
+            px += item->m_lefinfo->m_sx;
+        }
+        else
+        {
+            // nothing
+        }
+    }
+    else if (item->m_location == "E")
+    {
+        if (item->m_flipped)
+        {
+            flip = true;
+            rot = 270;
+            py += item->m_lefinfo->m_sx;
+        }
+        else
+        {
+            rot = 90;
+        }
+    }
+    else if (item->m_location == "W")
+    {        
+        if (item->m_flipped)
+        {
+            flip = true;
+            rot = 90;
+        }
+        else
+        {
+            py += item->m_lefinfo->m_sx;
+            rot = 270;
+        }
+    } 
+    // process corner cells that have NE,NW,SE,SW locations
+    else if (item->m_location == "NW")
+    {
+        rot = 270;
+    }
+    else if (item->m_location == "SE")
+    {
+        px += item->m_lefinfo->m_sy;
+        rot = 90;
+    }
+    else if (item->m_location == "NE")
+    {
+        px += item->m_lefinfo->m_sx;
+        rot = 180;
+    }
+    else if (item->m_location == "SW")
+    {
+        // nothing.
+    }
+
+    // SREF
+    writeUint16(0x0004);    // Len
+    writeUint16(0x0A00);    // SREF id
+
+    // SNAME
+    uint32_t bytes = item->m_cellname.size() + (item->m_cellname.size() % 2);
+    writeUint16(bytes+4);   // Len
+    writeUint16(0x1206);    // SNAME
+    writeString(item->m_cellname);
+
+    // check for FLIP
+    if (flip)
+    {
+        writeUint16(0x0006);
+        writeUint16(0x1A01);    // write STRANS
+        writeUint16(0x8000);     
+    }
+    else
+    {
+        writeUint16(0x0006);
+        writeUint16(0x1A01);    // write STRANS
+        writeUint16(0x0000);
+    }
+
+    // ANGLE
+    if (rot != 0)
+    {
+        writeUint16(4+8);
+        writeUint16(0x1C05);    // ANGLE id
+        switch(rot)
+        {
+        case 90:
+            writeUint8(2+64);       // exponent
+            writeUint32(0x5A000000);// mantissa
+            writeUint8(0);
+            writeUint8(0);
+            writeUint8(0);    
+            break;
+        case 180:
+            writeUint8(2+64);       // exponent
+            writeUint32(0xB4000000);// mantissa
+            writeUint8(0);
+            writeUint8(0);
+            writeUint8(0);    
+            break;
+        case 270:
+            writeUint8(3+64);       // exponent
+            writeUint32(0x10E00000);// mantissa
+            writeUint8(0);
+            writeUint8(0);
+            writeUint8(0);    
+            break;
+        default:
+            writeUint8(64);         // exponent
+            writeUint32(0x00000000);// mantissa
+            writeUint8(0);
+            writeUint8(0);
+            writeUint8(0);          
+        }
+    }
+
+    // XY
+    writeUint16(4+8);
+    writeUint16(0x1003);    // XY id
+    writeInt32(px*1000.0);
+    writeInt32(py*1000.0);
+
+    // ENDEL
+    writeUint16(4);         // Len
+    writeUint16(0x1100);    // ENDEL id
+
+}
+
+
+#if 0
+void GDS2Writer::writeCell(const std::string &cellName, int32_t x, int32_t y, orientation_t orientation, bool flip)
 {
     // SREF
     writeUint16(0x0004);    // Len
@@ -254,17 +418,32 @@ void GDS2Writer::writeCell(const std::string &cellName, int32_t x, int32_t y, or
 */
 
     // check for FLIP
-    if (orientation == FLIPY)
+    if (flip)
     {
         writeUint16(0x0006);
         writeUint16(0x1A01);    // write STRANS
-        writeUint16(0x0001);
+        writeUint16(0x8000);
+        switch(orientation)
+        {
+        case ROT0:
+            orientation = ROT180;
+            break;
+        case ROT90:
+            orientation = ROT270;
+            break;
+        case ROT180:
+            orientation = ROT0;
+            break; 
+        case ROT270:
+            orientation = ROT90;
+            break;            
+        }
     }
     else
     {
         writeUint16(0x0006);
         writeUint16(0x1A01);    // write STRANS
-        writeUint16(0x0000);        
+        writeUint16(0x0000);
     }
 
     // ANGLE
@@ -314,3 +493,4 @@ void GDS2Writer::writeCell(const std::string &cellName, int32_t x, int32_t y, or
     writeUint16(4);         // Len
     writeUint16(0x1100);    // ENDEL id
 }
+#endif
