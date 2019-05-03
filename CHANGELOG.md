@@ -12,5 +12,6 @@
 ### version 0.2b
 
 * ignore PROPERTYDEFINITIONS blocks.
-* added optional 'F' flag to flip PADs.
+* added optional 'FLIP' flag to flip PADs.
+* fixed DEF corner cell orientation.
 * enhanced SVG output so the designer can see the cell orientation.
