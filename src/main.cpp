@@ -15,12 +15,17 @@
     ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
     
+    Changelog:
+
+    0.02b - first release.
+    0.02c - exit when space can't be filled by filler cells.
+
 */
 
 #include <iostream>
 #include <fstream>
 
-#define __PGMVERSION__ "0.02b"
+#define __PGMVERSION__ "0.02c"
 
 #include "logging.h"
 
@@ -150,14 +155,14 @@ int main(int argc, char *argv[])
     if (fillerHandler.getCellCount() == 0)
     {
         doLog(LOG_ERROR, "Cannot proceed without filler cells. Please use the --filler option to explicitly specify a filler cell prefix\n");
-        return 1;
+        exit(1);
     }
 
     // check die size
     if ((padring.m_dieWidth < 1.0e-6) || (padring.m_dieHeight < 1.0e-6))
     {
         doLog(LOG_ERROR, "Die area was not specified! - aborting.\n");
-        return 1;
+        exit(1);
     }
 
     // generate report
@@ -183,7 +188,7 @@ int main(int argc, char *argv[])
         if (!svgos.is_open())
         {
             doLog(LOG_ERROR, "Cannot open SVG file for writing!\n");
-            return 1;
+            exit(1);
         }
     }
 
@@ -196,7 +201,7 @@ int main(int argc, char *argv[])
         if (!defos.is_open())
         {
             doLog(LOG_ERROR, "Cannot open DEF file for writing!\n");
-            return 1;
+            exit(1);
         }
     }
 
@@ -266,6 +271,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    exit(1);
                 }
             }
         }        
@@ -307,6 +313,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    exit(1);
                 }
             }
         }        
@@ -348,6 +355,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    exit(1);
                 }
             }
         }        
@@ -389,6 +397,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    exit(1);
                 }
             }
         }        
