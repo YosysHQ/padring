@@ -17,6 +17,8 @@ Check out the example in the `example` directory.
 
 The filler cells are auto-detected by the padring program. Should this process fail, the user can add an explicit prefix which will be used to find the filler cells.
 
+Multiple LEF files can be specified. During loading, existing cells with the same name will be overwritten.
+
 ## Configuration file
 
 The following commands are available:
