@@ -21,3 +21,4 @@
 * fixed a bug were PADRING would infintely loop if a gap could not be closed with the available filler cells.
 * name of replaced cells are now correctly displayed.
 * fixed a bug where replacing cells corrupted the cell database.
+* fixed a bug where non-square corner cells were not placed correctly in DEF file.
