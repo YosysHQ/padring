@@ -59,7 +59,7 @@ endif (DOXYGEN_FOUND AND BUILD_DOC)
 
 include_directories(${PROJECT_SOURCE_DIR}/contrib)
 set(PADRINGSRC 
-    ${PROJECT_SOURCE_DIR}/src/main.cpp
+    ${PROJECT_SOURCE_DIR}/src/main.cpp    
     ${PROJECT_SOURCE_DIR}/src/logging.cpp
     ${PROJECT_SOURCE_DIR}/src/layout.cpp
     ${PROJECT_SOURCE_DIR}/src/svgwriter.cpp
@@ -68,6 +68,7 @@ set(PADRINGSRC
     ${PROJECT_SOURCE_DIR}/src/configreader.cpp
     ${PROJECT_SOURCE_DIR}/src/lef/lefreader.cpp
     ${PROJECT_SOURCE_DIR}/src/gds2/gds2writer.cpp
+    ${PROJECT_SOURCE_DIR}/src/debugutils.cpp
 )
 
 add_executable(padring ${PADRINGSRC})

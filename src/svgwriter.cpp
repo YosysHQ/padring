@@ -157,7 +157,7 @@ void SVGWriter::writeCell(const LayoutItem *item)
     }
     else
     {
-        m_svg << "style=\"fill:#FAAD355;stroke:#F25844;stroke-width:0.5\" />\n";
+        m_svg << "style=\"fill:#FAAD35;stroke:#F25844;stroke-width:0.5\" />\n";
     }
 
     // show cell orientation

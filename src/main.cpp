@@ -37,6 +37,7 @@
 #include "svgwriter.h"
 #include "defwriter.h"
 #include "fillerhandler.h"
+#include "debugutils.h"
 #include "gds2/gds2writer.h"
 
 int main(int argc, char *argv[])
@@ -404,6 +405,11 @@ int main(int argc, char *argv[])
     }
 
     if (writer != nullptr) delete writer;
+
+    for(auto cell : padring.m_lefreader.m_cells)
+    {
+        DebugUtils::dumpToConsole(cell.second);
+    }
 
     return 0;
 }

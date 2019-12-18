@@ -15,3 +15,9 @@
 * added optional 'FLIP' flag to flip PADs.
 * fixed DEF corner cell orientation.
 * enhanced SVG output so the designer can see the cell orientation.
+
+### version 0.2c
+
+* fixed a bug were PADRING would infintely loop if a gap could not be closed with the available filler cells.
+* name of replaced cells are now correctly displayed.
+* fixed a bug where replacing cells corrupted the cell database.

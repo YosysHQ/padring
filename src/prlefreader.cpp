@@ -33,17 +33,25 @@ void PRLEFReader::onMacro(const std::string &macroName)
         doIntegrityChecks();
     }
 
-    m_parseCell = new LEFCellInfo_t();
-    m_parseCell->m_name = macroName;
+    // note: unordered_map::insert will only insert the element
+    // if the key is not already present.
+    // Therefore, we must first check if a cell/key is already 
+    // present and handle it accordingly.
 
     auto iter = m_cells.find(macroName);
     if (iter != m_cells.end())
     {
-        doLog(LOG_WARN,"Cell %s already in database - replaced\n");
-        delete iter->second;
+        doLog(LOG_WARN,"Cell %s already in database - replaced\n", macroName.c_str());
+        m_parseCell = iter->second;
     }
-    doLog(LOG_VERBOSE,"Added LEF cell %s\n", macroName.c_str());
-    m_cells.insert(std::make_pair(macroName, m_parseCell));
+    else
+    {
+        m_parseCell = new LEFCellInfo_t();
+        m_parseCell->m_name = macroName;
+        m_cells.insert(std::make_pair(macroName, m_parseCell));
+
+        doLog(LOG_VERBOSE,"Added LEF cell %s\n", macroName.c_str());
+    }
 }
 
 PRLEFReader::LEFCellInfo_t *PRLEFReader::getCellByName(const std::string &macroName) const
