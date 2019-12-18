@@ -99,7 +99,7 @@ void DEFWriter::writeCell(const LayoutItem *item)
     // do corners
     if (item->m_location == "NW")
     {
-        y -= item->m_lefinfo->m_sy;
+        y -= item->m_lefinfo->m_sx;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
         m_ss << "E ;\n";
