@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    doLog(LOG_ERROR, "Cannot find filler cell that fits remaining width %f\n", space);
                     exit(1);
                 }
             }
@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    doLog(LOG_ERROR, "Cannot find filler cell that fits remaining width %f\n", space);
                     exit(1);
                 }
             }
@@ -354,7 +354,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    doLog(LOG_ERROR, "Cannot find filler cell that fits remaining width %f\n", space);
                     exit(1);
                 }
             }
@@ -396,7 +396,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    doLog(LOG_ERROR, "Cannot find filled cell that fits remaining width %f\n", space);
+                    doLog(LOG_ERROR, "Cannot find filler cell that fits remaining width %f\n", space);
                     exit(1);
                 }
             }
