@@ -102,7 +102,7 @@ void DEFWriter::writeCell(const LayoutItem *item)
         y -= item->m_lefinfo->m_sx;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "E ;\n";
+        m_ss << "W ;\n";
     }
     else if (item->m_location == "SE")
     {
@@ -110,20 +110,20 @@ void DEFWriter::writeCell(const LayoutItem *item)
         //x += item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "W ;\n";
+        m_ss << "E ;\n";
     }
     else if (item->m_location == "NE")
     {
         y -= item->m_lefinfo->m_sy;
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "S ;\n";
+        m_ss << "N ;\n";
     }
     else if (item->m_location == "SW")
     {
         toDEFCoordinates(x,y);
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
-        m_ss << "N ;\n";
+        m_ss << "S ;\n";
     }
     else if (item->m_location == "E")
     {
@@ -133,11 +133,11 @@ void DEFWriter::writeCell(const LayoutItem *item)
 
         if (!item->m_flipped) 
         {
-            m_ss << " W" << " ;\n";
+            m_ss << " E" << " ;\n";
         }
         else
         {
-            m_ss << " FE" << " ;\n";
+            m_ss << " W" << " ;\n";
         }
     }
     else if (item->m_location == "N")
@@ -147,11 +147,11 @@ void DEFWriter::writeCell(const LayoutItem *item)
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
         if (!item->m_flipped) 
         {
-            m_ss << " S" << " ;\n";
+            m_ss << " N" << " ;\n";
         }
         else
         {
-            m_ss << " FS" << " ;\n";
+            m_ss << " S" << " ;\n";
         }
     }   
     else if (item->m_location == "S")
@@ -161,11 +161,11 @@ void DEFWriter::writeCell(const LayoutItem *item)
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
         if (!item->m_flipped)
         {
-            m_ss << " N" << " ;\n";
+            m_ss << " S" << " ;\n";
         }
         else
         {
-            m_ss << " FN" << " ;\n";
+            m_ss << " N" << " ;\n";
         }
     }        
     else
@@ -174,11 +174,11 @@ void DEFWriter::writeCell(const LayoutItem *item)
         m_ss << "    + PLACED ( " << x << " " << y << " ) ";
         if (!item->m_flipped) 
         {
-            m_ss << " E" << " ;\n";
+            m_ss << " W" << " ;\n";
         }
         else
         {
-            m_ss << " W" << " ;\n";
+            m_ss << " E" << " ;\n";
         }
     }
 }
