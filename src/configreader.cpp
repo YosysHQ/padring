@@ -50,7 +50,9 @@ bool ConfigReader::isAlphaNumeric(char c) const
 
 bool ConfigReader::isSpecialIdentChar(char c) const
 {
-    if ((c == '[') || (c == ']') || (c == '<') || (c == '>') || (c == '/'))
+    if ((c == '[') || (c == ']') ||
+        (c == '<') || (c == '>') ||
+        (c == '/') || (c == '\\'))
     {
         return true;
     }
