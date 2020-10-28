@@ -52,7 +52,8 @@ bool ConfigReader::isSpecialIdentChar(char c) const
 {
     if ((c == '[') || (c == ']') ||
         (c == '<') || (c == '>') ||
-        (c == '/') || (c == '\\'))
+        (c == '/') || (c == '\\') ||
+        (c == '.'))
     {
         return true;
     }
