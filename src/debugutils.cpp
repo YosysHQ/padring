@@ -18,6 +18,7 @@
 */
 
 #include "debugutils.h"
+#include <sstream>
 
 void DebugUtils::dumpToConsole(const PRLEFReader::LEFCellInfo_t *cell)
 {
