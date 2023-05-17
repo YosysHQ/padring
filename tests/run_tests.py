@@ -8,7 +8,8 @@ tests = [["noarea.config", "iocells.lef", 1],
          ["syntax.config", "iocells.lef", 1],
          ["threecorners.config", "iocells.lef", 0],
          ["fillerexit.config", "iocells_nofiller1.lef", 1],
-         ["nonsquarecorners.config", "nonsquarecorners.lef", 0]
+         ["nonsquarecorners.config", "nonsquarecorners.lef", 0],
+         ["dummy.config", "foreign.lef", 0]
 ]
 
 

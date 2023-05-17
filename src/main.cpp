@@ -25,7 +25,7 @@
 #include <iostream>
 #include <fstream>
 
-#define __PGMVERSION__ "0.02c"
+#define __PGMVERSION__ "0.02d"
 
 #include "logging.h"
 
@@ -59,15 +59,14 @@ int main(int argc, char *argv[])
         ("q,quiet", "produce no console output")
         ("v,verbose", "produce verbose output")
         ("filler", "set the filler cell prefix", cxxopts::value<std::vector<std::string>>())
-        ("positional",
-            "", cxxopts::value<std::vector<std::string>>());
+        ("config_file", "set the configuration file", cxxopts::value<std::vector<std::string>>());
 
-    options.parse_positional({"configfile", "positional"});
+    options.parse_positional({"config_file"});
 
     auto cmdresult = options.parse(argc, argv);
 
     if ((cmdresult.count("help")>0) || 
-        (cmdresult.count("positional")!=1))
+        (cmdresult.count("config_file")!=1))
     {
         std::cout << options.help({"", "Group"}) << std::endl;
         exit(0);
@@ -115,7 +114,7 @@ int main(int argc, char *argv[])
 
     doLog(LOG_INFO,"%d cells read\n", padring.m_lefreader.m_cells.size());
 
-    auto& v = cmdresult["positional"].as<std::vector<std::string> >();
+    auto& v = cmdresult["config_file"].as<std::vector<std::string> >();
     std::string configFileName = v[0];
 
     std::ifstream configStream(configFileName, std::ifstream::in);

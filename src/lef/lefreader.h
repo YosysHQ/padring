@@ -128,6 +128,7 @@ protected:
     bool parseSymmetry();
     bool parseSite();
     bool parsePin();
+    bool parsePinName(std::string &outName);
     bool parseDirection();
     bool parseUse();
     

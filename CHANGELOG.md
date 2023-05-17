@@ -22,3 +22,8 @@
 * name of replaced cells are now correctly displayed.
 * fixed a bug where replacing cells corrupted the cell database.
 * fixed a bug where non-square corner cells were not placed correctly in DEF file.
+
+### version 0.2d
+
+* updated contrib/cxxopts.h
+* pin names can now have a bus index [].

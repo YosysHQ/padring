@@ -341,33 +341,64 @@ bool LEFReader::parseMacro()
     }
 }
 
-bool LEFReader::parsePin()
+bool LEFReader::parsePinName(std::string &outName)
 {
-    std::string name;
-    
-
     // pin name
-    m_curtok = tokenize(name);
+    m_curtok = tokenize(outName);
     if (m_curtok != TOK_IDENT)
     {
         error("Expected a pin name\n");
         return false;
     }
 
-    //std::cout << "  PIN " << name << "\n"; 
+    // optionally parse bus index
+    m_curtok = tokenize(m_tokstr);
+    while(m_curtok == TOK_LBRACKET)
+    {
+        m_curtok = tokenize(m_tokstr);
+        if (m_curtok != TOK_NUMBER)
+        {
+            error("Expected a number in pin brackets");
+            return false;
+        }
+        auto numstr = m_tokstr;
+        
+        m_curtok = tokenize(m_tokstr);
+        if (m_curtok != TOK_RBRACKET)
+        {
+            error("Expected closing bracket");
+            return false;
+        }
+
+        outName.append("[");
+        outName.append(numstr);
+        outName.append("]");
+
+        m_curtok = tokenize(m_tokstr);
+    }
+    return true;
+}
+
+bool LEFReader::parsePin()
+{
+    std::string name;
+    
+    if (!parsePinName(name))
+    {
+        return false;
+    }
 
     // expect EOL
-    m_curtok = tokenize(m_tokstr);
     if (m_curtok != TOK_EOL)
     {
         error("Expected EOL\n");
         return false;
     }
 
+    std::cout << "  PIN: " << name << "\n";
+
     onPin(name);
 
-    // wait for 'END macroname'
-    bool endFound = false;
     while(true)
     {
         m_curtok = tokenize(m_tokstr);
@@ -385,24 +416,34 @@ bool LEFReader::parsePin()
             else if (m_tokstr == "PORT")
             {
                 parsePort();
-            }           
-        }
-
-        if (endFound)
-        {
-            if ((m_curtok == TOK_IDENT) && (m_tokstr == name))
-            {
-                //std::cout << "  END " << name << "\n";
-                return true;
             }
-        }
-        else if ((m_curtok == TOK_IDENT) && (m_tokstr == "END"))
-        {
-            endFound = true;
-        }
-        else
-        {
-            endFound = false;
+            else if (m_tokstr == "END")
+            {
+                std::string endName;
+                if (!parsePinName(endName))
+                {
+                    std::stringstream ss;
+                    ss << "Expected pin name " << endName << "\n";
+                    error(ss.str());
+                    return false;
+                }
+
+                if (endName != name)
+                {
+                    std::stringstream ss;
+                    ss << "Expected pin name " << endName << "\n";
+                    error(ss.str());
+                    return false;
+                }
+
+                if (m_curtok != TOK_EOL)
+                {
+                    error("Expected EOL\n");
+                    return false;
+                }
+
+                return true;
+            }           
         }
 
         if (m_is->eof())
@@ -600,7 +641,7 @@ bool LEFReader::parseSymmetry()
 
 bool LEFReader::parseForeign()
 {
-    // FOREIGN <cellname> <number> <number> ; 
+    // FOREIGN <cellname> [<number> <number>] ; 
 
     std::string cellname;
     std::string xnum;
@@ -613,39 +654,46 @@ bool LEFReader::parseForeign()
         return false;
     }
 
+    // foreign point is optional
+
     m_curtok = tokenize(xnum);
-    if (m_curtok != TOK_NUMBER)
+    if (m_curtok == TOK_NUMBER)
     {
-        error("Expected a number\n");
+        m_curtok = tokenize(ynum);
+        if (m_curtok != TOK_NUMBER)
+        {
+            error("Expected a number\n");
+            return false;
+        }
+
+        m_curtok = tokenize(m_tokstr);
+        if (m_curtok != TOK_SEMICOL)
+        {
+            error("Expected a semicolon\n");
+            return false;
+        }
+
+        double xnumd, ynumd;
+        try
+        {
+            xnumd = std::stod(xnum);
+            ynumd = std::stod(ynum);
+        }
+        catch(const std::invalid_argument& ia)
+        {
+            error(ia.what());
+        }
+
+        onForeign(cellname, xnumd, ynumd);
+        return true;
+    }
+    else if (m_curtok != TOK_SEMICOL)
+    {
+        error("Expected a number or semicolon\n");
         return false;
-    }
+    }    
 
-    m_curtok = tokenize(ynum);
-    if (m_curtok != TOK_NUMBER)
-    {
-        error("Expected a number\n");
-        return false;
-    }
-
-    m_curtok = tokenize(m_tokstr);
-    if (m_curtok != TOK_SEMICOL)
-    {
-        error("Expected a semicolon\n");
-        return false;
-    }
-
-    double xnumd, ynumd;
-    try
-    {
-        xnumd = std::stod(xnum);
-        ynumd = std::stod(ynum);
-    }
-    catch(const std::invalid_argument& ia)
-    {
-        error(ia.what());
-    }
-
-    onForeign(cellname, xnumd, ynumd);
+    onForeign(cellname, 0, 0);
 
     return true;
 };
@@ -713,7 +761,6 @@ bool LEFReader::parsePort()
 {
     std::string name;
     
-
     m_curtok = tokenize(m_tokstr);
     if (m_curtok != TOK_EOL)
     {
