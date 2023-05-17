@@ -1,10 +1,16 @@
 task:
-  name: build-test-ubuntu1804
+  
+  matrix:
+  - name: "build-test-ubuntu1804"
+    container:
+      dockerfile: .cirrus/Dockerfile.ubuntu18.04
+  - name: "build-test-ubuntu2204"
+    container:
+      dockerfile: .cirrus/Dockerfile.ubuntu22.04
+
   container:
     cpu: 4
     memory: 16
-    dockerfile: .cirrus/Dockerfile.ubuntu18.04
-
+    
   build_script: ./bootstrap.sh && cd build && ninja && cd ..
   test_script: cd ./tests && ./run_tests.py
-  
