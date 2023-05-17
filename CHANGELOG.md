@@ -27,3 +27,5 @@
 
 * updated contrib/cxxopts.h
 * pin names can now have a bus index [].
+* config file can now have pin names with \ and .
+* include file fix in debugutils.
